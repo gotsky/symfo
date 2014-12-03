@@ -103,9 +103,9 @@ class AdvertController extends Controller
 
      // Création de l'entité
     $advert = new Advert();
-    $advert->setTitle('Recherche développeur Symfony2.');
-    $advert->setAuthor('Alexandre');
-    $advert->setContent("Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…");
+    $advert->setTitle('Offre de stage webdesignerr.');
+    $advert->setAuthor('Math');
+    $advert->setContent("Nous proposons un poste pour webdesigner. Blabla…");
     // On peut ne pas définir ni la date ni la publication,
     // car ces attributs sont définis automatiquement dans le constructeur
     // On récupère l'EntityManager
@@ -134,9 +134,9 @@ class AdvertController extends Controller
     }
 
     $advert = array(
-      'title'   => 'Recherche développpeur Symfony2',
+      'title'   => 'Offre de stage webdesigner',
       'id'      => $id,
-      'author'  => 'Alexandre',
+      'author'  => 'Mathieu',
       'content' => 'Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…',
       'date'    => new \Datetime()
     );
