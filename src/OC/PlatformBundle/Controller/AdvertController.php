@@ -6,6 +6,7 @@ namespace OC\PlatformBundle\Controller;
 
 use OC\PlatformBundle\Entity\Advert;
 use OC\PlatformBundle\Entity\Image;
+use OC\PlatformBundle\Entity\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -102,29 +103,67 @@ class AdvertController extends Controller
     // }
     /*****************************/
 
-     // Création de l'entité
-    $advert = new Advert();
-    $advert->setTitle('Offre de chef de projet.');
-    $advert->setAuthor('Math');
-    $advert->setContent("Nous proposons un poste pour un chef de pojet basé à Grenoble. Blabla…");
+    //***********ajout d'une image***********/
+    // Création de l'entité
+    // $advert = new Advert();
+    // $advert->setTitle('Offre de chef de projet.');
+    // $advert->setAuthor('Math');
+    // $advert->setContent("Nous proposons un poste pour un chef de pojet basé à Grenoble. Blabla…");
 
     // Création de l'entité Image
-    $image = new Image();
-    $image->setUrl('http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg');
-    $image->setAlt('Job de rêve');
+    // $image = new Image();
+    // $image->setUrl('http://sdz-upload.s3.amazonaws.com/prod/upload/job-de-reve.jpg');
+    // $image->setAlt('Job de rêve');
 
     // On lie l'image à l'annonce
-    $advert->setImage($image);
+    //$advert->setImage($image);
 
 
-    // On peut ne pas définir ni la date ni la publication,
-    // car ces attributs sont définis automatiquement dans le constructeur
+    // On récupère l'EntityManager
+    //$em = $this->getDoctrine()->getManager();
+    // Étape 1 : On « persiste » l'entité
+    //$em->persist($advert);
+    // Étape 2 : On « flush » tout ce qui a été persisté avant
+    //$em->flush();
+    /********************************************/
+
+    //***********ajout d'annonces***********/
+    // Création de l'entité Advert
+    $advert = new Advert();
+    $advert->setTitle('Recherche développeur Symfony2.');
+    $advert->setAuthor('Alexandre');
+    $advert->setContent("Nous recherchons un développeur Symfony2 débutant sur Lyon. Blabla…");
+
+    // Création d'une première candidature
+    $application1 = new Application();
+    $application1->setAuthor('Marine');
+    $application1->setContent("J'ai toutes les qualités requises.");
+
+    // Création d'une deuxième candidature par exemple
+    $application2 = new Application();
+    $application2->setAuthor('Pierre');
+    $application2->setContent("Je suis très motivé.");
+
+    // On lie les candidatures à l'annonce
+    $application1->setAdvert($advert);
+    $application2->setAdvert($advert);
+
     // On récupère l'EntityManager
     $em = $this->getDoctrine()->getManager();
+
     // Étape 1 : On « persiste » l'entité
     $em->persist($advert);
+
+    // Étape 1 bis : pour cette relation pas de cascade lorsqu'on persiste Advert, car la relation est
+    // définie dans l'entité Application et non Advert. On doit donc tout persister à la main ici.
+    $em->persist($application1);
+    $em->persist($application2);
+
     // Étape 2 : On « flush » tout ce qui a été persisté avant
     $em->flush();
+    /***************************************/
+
+
     // Reste de la méthode qu'on avait déjà écrit
     if ($request->isMethod('POST')) {
       $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
