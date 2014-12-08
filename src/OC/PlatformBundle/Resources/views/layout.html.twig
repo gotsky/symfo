@@ -2,15 +2,15 @@
 {% extends "OCCoreBundle::layout.html.twig" %}
 
 {% block title %}
-  Annonces - {{ parent() }}
+    Annonces - {{ parent() }}
 {% endblock %}
 
 {# block menu platform #}
 {% block menu %}
     <h3>Les annonces</h3>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="{{ path('oc_platform_home') }}">Accueil</a></li>
-      <li><a href="{{ path('oc_platform_add') }}">Ajouter une annonce</a></li>
+        <li><a href="{{ path('oc_platform_home') }}">Accueil</a></li>
+        <li><a href="{{ path('oc_platform_add') }}">Ajouter une annonce</a></li>
     </ul>
 
     <h4>Dernières annonces</h4>
@@ -29,19 +29,19 @@
    		<a class="btn btn-primary btn-lg" href="http://fr.openclassrooms.com/informatique/cours/developpez-votre-site-web-avec-le-framework-symfony2">
       	Participer au MOOC »
     	</a>
-  </p>
+    </p>
 {% endblock %}
 
 
 {% block body %}
 
-  {# On définit un sous-titre commun à toutes les pages du bundle, par exemple #}
-  <h1>Annonces</h1>
+    {# On définit un sous-titre commun à toutes les pages du bundle, par exemple #}
+    <h1>Annonces</h1>
 
-  <hr>
+    <hr>
 
-  {# On définit un nouveau bloc, que les vues du bundle pourront remplir #}
-  {% block ocplatform_body %}
-  {% endblock %}
+    {# On définit un nouveau bloc, que les vues du bundle pourront remplir #}
+    {% block ocplatform_body %}
+    {% endblock %}
 
 {% endblock %}
