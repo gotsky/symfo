@@ -2,6 +2,7 @@
 
 namespace OC\PlatformBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -21,6 +22,11 @@ class Advert
     * @ORM\OneToOne(targetEntity="OC\PlatformBundle\Entity\Image", cascade={"persist"})
     */
     private $image;
+
+    /**
+     * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\Application", mappedBy="advert")
+     */
+    private $applications; // Notez le « s », une annonce est liée à plusieurs candidatures
 
     /**
      * @var integer
@@ -67,6 +73,8 @@ class Advert
     //constructeur
     public function __construct()
     {
+        //applivcations (relations bidirectionnelles)
+        $this->applications = new ArrayCollection();
         // Par défaut, la date de l'annonce est la date d'aujourd'hui
         $this->date = new \Datetime();
     }
@@ -251,5 +259,28 @@ class Advert
     public function getCategories()
     {
         return $this->categories;
+    }
+
+    public function addApplication(Application $application)
+    {
+        $this->applications[] = $application;
+
+        // On lie l'annonce à la candidature
+        $application->setAdvert($this);
+
+        return $this;
+    }
+
+    public function removeApplication(Application $application)
+    {
+        $this->applications->removeElement($application);
+
+        // Et si notre relation était facultative (nullable=true, ce qui n'est pas notre cas ici attention) :        
+        // $application->setAdvert(null);
+    }
+
+    public function getApplications()
+    {
+        return $this->applications;
     }
 }

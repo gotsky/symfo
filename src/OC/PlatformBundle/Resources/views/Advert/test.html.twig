@@ -1,0 +1,24 @@
+
+{% extends "OCPlatformBundle::layout.html.twig" %}
+
+{% block title %}
+    Test - {{ parent() }}
+{% endblock %}
+
+{% block ocplatform_body %}
+
+
+    {% if listAdverts|length > 0 %}
+        <div>
+            Cette annonce requiert les compétences suivantes :
+            <!-- methode a eviter en realité: cf http://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony2/recuperer-ses-entites-avec-doctrine2 -->
+            <ul>
+            {% for advert in listAdverts %}
+                <li>{{ advert.title }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+   
+
+{% endblock %}

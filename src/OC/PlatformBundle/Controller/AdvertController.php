@@ -102,6 +102,22 @@ class AdvertController extends Controller
     ));
   }
 
+  public function testAction($id)
+  {
+
+    $repository = $this
+      ->getDoctrine()
+      ->getManager()
+      ->getRepository('OCPlatformBundle:Advert')
+    ;
+    
+    $listAdverts = $repository->myFindAll();
+    return $this->render('OCPlatformBundle:Advert:test.html.twig', array(
+      'listAdverts' => $listAdverts
+    ));
+    //print_r($listAdverts);
+  }
+
   public function addAction(Request $request)
   {
     // La gestion d'un formulaire est particulière, mais l'idée est la suivante :
