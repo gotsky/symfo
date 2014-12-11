@@ -5,6 +5,7 @@
 namespace OC\PlatformBundle\Controller;
 
 use OC\PlatformBundle\Entity\Advert;
+use OC\PlatformBundle\Entity\AdvertSkill;
 use OC\PlatformBundle\Entity\Image;
 use OC\PlatformBundle\Entity\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -68,14 +69,13 @@ class AdvertController extends Controller
   public function viewAction($id)
   {
 
-    // On récupère le repository
-    $repository = $this->getDoctrine()
-      ->getManager()
-      ->getRepository('OCPlatformBundle:Advert')
-    ;
+    $em = $this->getDoctrine()->getManager();
 
-    // On récupère l'entité correspondante à l'id $id
-    $advert = $repository->find($id);
+    // On récupère l'annonce $id
+    $advert = $em
+      ->getRepository('OCPlatformBundle:Advert')
+      ->find($id)
+    ;
 
     // $advert est donc une instance de OC\PlatformBundle\Entity\Advert
     // ou null si l'id $id  n'existe pas, d'où ce if :
@@ -83,9 +83,22 @@ class AdvertController extends Controller
       throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
     }
 
-    // Le render ne change pas, on passait avant un tableau, maintenant un objet
+     // On avait déjà récupéré la liste des candidatures
+    $listApplications = $em
+      ->getRepository('OCPlatformBundle:Application')
+      ->findBy(array('advert' => $advert))
+    ;
+
+    // On récupère maintenant la liste des AdvertSkill
+    $listAdvertSkills = $em
+      ->getRepository('OCPlatformBundle:AdvertSkill')
+      ->findBy(array('advert' => $advert))
+    ;
+
     return $this->render('OCPlatformBundle:Advert:view.html.twig', array(
-      'advert' => $advert
+      'advert'           => $advert,
+      'listApplications' => $listApplications,
+      'listAdvertSkills' => $listAdvertSkills
     ));
   }
 
@@ -150,6 +163,26 @@ class AdvertController extends Controller
 
     // On récupère l'EntityManager
     $em = $this->getDoctrine()->getManager();
+
+    // On récupère toutes les compétences possibles
+    $listSkills = $em->getRepository('OCPlatformBundle:Skill')->findAll();
+
+    // Pour chaque compétence
+    foreach ($listSkills as $skill) {
+      // On crée une nouvelle « relation entre 1 annonce et 1 compétence »
+      $advertSkill = new AdvertSkill();
+
+      // On la lie à l'annonce, qui est ici toujours la même
+      $advertSkill->setAdvert($advert);
+      // On la lie à la compétence, qui change ici dans la boucle foreach
+      $advertSkill->setSkill($skill);
+
+      // Arbitrairement, on dit que chaque compétence est requise au niveau 'Expert'
+      $advertSkill->setLevel('Expert');
+
+      // Et bien sûr, on persiste cette entité de relation, propriétaire des deux autres relations
+      $em->persist($advertSkill);
+    }
 
     // Étape 1 : On « persiste » l'entité
     $em->persist($advert);

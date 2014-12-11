@@ -25,6 +25,18 @@
                 {% endfor %}
             </p>
         {% endif %}
+
+        {% if listAdvertSkills|length > 0 %}
+            <div>
+                Cette annonce requiert les compétences suivantes :
+                <!-- methode a eviter en realité: cf http://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony2/recuperer-ses-entites-avec-doctrine2 -->
+                <ul>
+                {% for advertSkill in listAdvertSkills %}
+                    <li>{{ advertSkill.skill.name }} : niveau {{ advertSkill.level }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
     </div>
 
     <p>
