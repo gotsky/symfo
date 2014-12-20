@@ -21,17 +21,17 @@ class ApplicationNotification
 
         // On veut envoyer un email que pour les entités Application
         if (!$entity instanceof Application) {
-          return;
+            return;
         }
 
         $message = new \Swift_Message(
-          'Nouvelle candidature',
-          'Vous avez reçu une nouvelle candidature.'
+            'Nouvelle candidature',
+            'Vous avez reçu une nouvelle candidature.'
         );
 
         $message
-          ->addTo($entity->getAdvert()->getAuthor()) // Ici bien sûr il faudrait un attribut "email", j'utilise "author" à la place
-          ->addFrom('admin@votresite.com')
+            ->addTo($entity->getAdvert()->getAuthor()) // Ici bien sûr il faudrait un attribut "email", j'utilise "author" à la place
+            ->addFrom('admin@votresite.com')
         ;
 
         $this->mailer->send($message);
