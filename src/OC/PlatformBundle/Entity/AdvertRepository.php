@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 // N'oubliez pas ce use
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * AdvertRepository
@@ -92,5 +93,35 @@ class AdvertRepository extends EntityRepository
 			->getQuery()
 			->getResult()
 		;
+	}
+
+	public function getAdverts($page, $nbPerPage)
+	{
+	  	$qb = $this->createQueryBuilder('a');
+
+	    // On fait une jointure avec l'entité Category avec pour alias « c »
+	    $qb
+			->leftJoin('a.categories', 'c')
+			->addSelect('c')
+	    ;
+	    // On fait une jointure avec l'entité Image avec pour alias « img »
+	    $qb
+			->leftJoin('a.image', 'img')
+			->addSelect('img')
+	    ;
+
+	    // Puis on ne retourne que $limit résultats
+    	$qb->orderBy('a.date', 'DESC');
+
+		$qb
+	      // On définit l'annonce à partir de laquelle commencer la liste
+	      ->setFirstResult(($page-1) * $nbPerPage)
+	      // Ainsi que le nombre d'annonce à afficher sur une page
+	      ->setMaxResults($nbPerPage)
+	    ;
+
+	    // Enfin, on retourne l'objet Paginator correspondant à la requête construite
+	    // (n'oubliez pas le use correspondant en début de fichier)
+	    return new Paginator($qb, true);
 	}
 }
